@@ -21,7 +21,7 @@ from tools.ta_analysis import compute_ta
 from tools.ta_indicators import list_indicators as _list_indicators
 from tools.ta_indicators import compute_single_indicator
 
-mcp = FastMCP("jv-stock-market")
+mcp = FastMCP("jv-idx-mcp")
 
 
 @mcp.tool()
