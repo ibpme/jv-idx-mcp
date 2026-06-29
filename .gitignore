@@ -16,4 +16,4 @@ agents/
 results/
 .cache/*
 !.cache/.gitkeep
-config/
+.config/
