@@ -32,7 +32,10 @@ from typing import Any
 import numpy as np
 import talib
 
-from yfinance_ohlcv import fetch_ohlcv
+try:
+    from .yfinance_ohlcv import fetch_ohlcv
+except ImportError:
+    from yfinance_ohlcv import fetch_ohlcv  # type: ignore[no-redef]
 
 # ---------------------------------------------------------------------------
 # Helpers

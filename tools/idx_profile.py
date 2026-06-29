@@ -12,7 +12,7 @@ from typing import Optional
 
 from curl_cffi import requests
 
-CACHE_FILE = Path(__file__).parent / "profiles_cache.json"
+CACHE_FILE = Path(__file__).parent.parent / ".cache" / "profiles_cache.json"
 CACHE_TTL_SECONDS = 86400 * 7  # 7 days
 
 IDX_URL = "https://www.idx.co.id/primary/ListedCompany/GetCompanyProfilesDetail"
@@ -46,6 +46,7 @@ def _load_cache() -> dict:
 
 
 def _save_cache(cache: dict) -> None:
+    CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
     CACHE_FILE.write_text(json.dumps(cache))
 
 

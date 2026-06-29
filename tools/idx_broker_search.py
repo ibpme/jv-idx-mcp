@@ -11,7 +11,7 @@ from typing import Optional
 
 from curl_cffi import requests
 
-CACHE_FILE = Path(__file__).parent / "broker_cache.json"
+CACHE_FILE = Path(__file__).parent.parent / ".cache" / "broker_cache.json"
 CACHE_TTL_SECONDS = 86400  # 1 day
 
 IDX_URL = "https://www.idx.co.id/primary/TradingSummary/GetBrokerSummary"
@@ -50,6 +50,7 @@ def _load_cache() -> Optional[dict]:
 def _build_and_save_cache() -> dict:
     data = _fetch_broker()
     brokers = {entry["IDFirm"]: entry for entry in data}
+    CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
     CACHE_FILE.write_text(json.dumps({"fetched_at": time.time(), "brokers": brokers}))
     return brokers
 

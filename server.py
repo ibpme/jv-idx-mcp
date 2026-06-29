@@ -3,27 +3,23 @@
 from __future__ import annotations
 
 import json
-import os
-import sys
-
-sys.path.insert(0, os.path.dirname(__file__))
 
 import httpx
 from curl_cffi.requests.exceptions import HTTPError as CurlHTTPError
 from curl_cffi.requests.exceptions import RequestException as CurlRequestException
 from mcp.server.fastmcp import FastMCP
 
-from idx_broker_search import lookup_broker_details, lookup_broker_name
-from idx_profile import get_profile
-from ipot_fundamental import _to_csv, _to_str, fetch_fundamental
-from ipot_broker_summary import (
+from tools.idx_broker_search import lookup_broker_details, lookup_broker_name
+from tools.idx_profile import get_profile
+from tools.ipot_fundamental import _to_csv, _to_str, fetch_fundamental
+from tools.ipot_broker_summary import (
     fetch_broker_summary,
     fetch_broker_flow,
     fetch_broker_flow_cumulative,
 )
-from ta_analysis import compute_ta
-from ta_indicators import list_indicators as _list_indicators
-from ta_indicators import compute_single_indicator
+from tools.ta_analysis import compute_ta
+from tools.ta_indicators import list_indicators as _list_indicators
+from tools.ta_indicators import compute_single_indicator
 
 mcp = FastMCP("jv-stock-market")
 

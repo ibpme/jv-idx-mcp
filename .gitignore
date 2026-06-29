@@ -12,5 +12,8 @@ wheels/
 .DS_Store
 
 skills/
+agents/
 results/
-*_cache.json
+.cache/*
+!.cache/.gitkeep
+config/
