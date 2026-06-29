@@ -345,7 +345,7 @@ wheels = [
 ]
 
 [[package]]
-name = "jv-stock-market-mcp"
+name = "jv-idx-mcp"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
