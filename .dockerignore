@@ -1,0 +1,15 @@
+.git
+.gitignore
+.DS_Store
+.venv
+.cache
+.claude
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+agents/
+skills/
+results/
+config/
+*.md
