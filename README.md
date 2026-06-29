@@ -20,6 +20,13 @@ MCP server exposing Indonesia Stock Exchange (IDX) market data as tools — fund
 > **LLM?** Paste this link to get step-by-step setup instructions:
 > `https://raw.githubusercontent.com/ibpme/jv-idx-mcp/refs/heads/main/LLM.md`
 
+or past this into your coding agent:
+
+```sh
+Install and configure jv-idx-mcp server by following the instructions here:
+https://raw.githubusercontent.com/ibpme/jv-idx-mcp/refs/heads/main/LLM.md
+```
+
 ## Authentication
 
 The server supports optional Bearer token auth. Set `MCP_API_KEY` on the server to enable it — unauthenticated requests will receive `401`.
