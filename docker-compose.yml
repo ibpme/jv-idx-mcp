@@ -1,0 +1,14 @@
+services:
+  jv-idx-mcp:
+    container_name: jv-idx-mcp
+    image: jv-idx-mcp:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
