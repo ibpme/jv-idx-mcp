@@ -116,5 +116,5 @@ Requires Python 3.14+ and [uv](https://github.com/astral-sh/uv). Also requires T
 
 ```bash
 uv sync
-uv run mcp run server.py --transport streamable-http --host 0.0.0.0 --port 8000
+uv run python server.py
 ```

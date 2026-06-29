@@ -36,4 +36,4 @@ ENV PORT=8000
 
 EXPOSE 8000
 
-CMD ["mcp", "run", "server.py", "--transport", "streamable-http", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "server.py"]
