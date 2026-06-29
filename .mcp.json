@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "jv-stock-market": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "/Users/budi/Documents/Stock-Market/jv-stock-market-mcp",
+        "python",
+        "/Users/budi/Documents/Stock-Market/jv-stock-market-mcp/server.py"
+      ]
+    }
+  }
+}

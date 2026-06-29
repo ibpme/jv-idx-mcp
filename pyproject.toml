@@ -1,0 +1,12 @@
+[project]
+name = "jv-stock-market-mcp"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "curl-cffi>=0.14.0",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.0.0",
+    "ta-lib>=0.6.8",
+    "yfinance>=0.2.66",
+]
