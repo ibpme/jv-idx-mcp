@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import secrets
 
 import httpx
@@ -10,6 +11,8 @@ from curl_cffi.requests.exceptions import HTTPError as CurlHTTPError
 from curl_cffi.requests.exceptions import RequestException as CurlRequestException
 from mcp.server.fastmcp import FastMCP
 from starlette.responses import Response
+
+from auth.oauth import OAuthConfig, build_oauth_app
 
 
 class BearerAuthMiddleware:
@@ -28,20 +31,22 @@ class BearerAuthMiddleware:
                 return
         await self.app(scope, receive, send)
 
+
 from tools.idx_broker_search import lookup_broker_details, lookup_broker_name
 from tools.idx_profile import get_profile
-from tools.ipot_fundamental import _to_csv, _to_str, fetch_fundamental
 from tools.ipot_broker_summary import (
-    fetch_broker_summary,
     fetch_broker_flow,
     fetch_broker_flow_cumulative,
+    fetch_broker_summary,
 )
+from tools.ipot_fundamental import _to_csv, _to_str, fetch_fundamental
 from tools.ta_analysis import compute_ta
-from tools.ta_indicators import list_indicators as _list_indicators
 from tools.ta_indicators import compute_single_indicator
+from tools.ta_indicators import list_indicators as _list_indicators
 
-import os
-mcp = FastMCP("jv-idx-mcp", host=os.getenv("HOST", "0.0.0.0"), port=int(os.getenv("PORT", "8000")))
+mcp = FastMCP(
+    "jv-idx-mcp", host=os.getenv("HOST", "0.0.0.0"), port=int(os.getenv("PORT", "8000"))
+)
 
 
 @mcp.tool()
@@ -531,9 +536,17 @@ if __name__ == "__main__":
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", "8000"))
     api_key = os.getenv("MCP_API_KEY", "")
+    oauth_config = OAuthConfig.from_env()
 
-    if api_key:
-        app = mcp.streamable_http_app()
-        uvicorn.run(BearerAuthMiddleware(app, api_key), host=host, port=port)
+    app = mcp.streamable_http_app()
+
+    if oauth_config:
+        app = build_oauth_app(app, oauth_config)
+        print(f"OAuth 2.0 auth enabled (issuer: {oauth_config.issuer})")
+    elif api_key:
+        app = BearerAuthMiddleware(app, api_key)
+        print("Bearer token auth enabled (MCP_API_KEY)")
     else:
-        mcp.run(transport="streamable-http")
+        print("No auth enabled — server is open")
+
+    uvicorn.run(app, host=host, port=port)

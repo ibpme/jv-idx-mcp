@@ -16,6 +16,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev --no-install-project
 
 COPY server.py ./
+COPY auth/ ./auth/
 COPY tools/ ./tools/
 
 
@@ -26,6 +27,7 @@ RUN ldconfig
 
 COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app/server.py /app/
+COPY --from=builder /app/auth /app/auth
 COPY --from=builder /app/tools /app/tools
 
 WORKDIR /app

@@ -8,6 +8,10 @@ services:
     restart: unless-stopped
     environment:
       - MCP_API_KEY=${MCP_API_KEY:-}
+      - OAUTH_ISSUER=${OAUTH_ISSUER:-}
+      - OAUTH_JWKS_URI=${OAUTH_JWKS_URI:-}
+      - OAUTH_AUDIENCE=${OAUTH_AUDIENCE:-}
+      - OAUTH_SCOPES=${OAUTH_SCOPES:-}
     networks:
       - proxy
 

@@ -17,3 +17,4 @@ results/
 .cache/*
 !.cache/.gitkeep
 .config/
+.omo

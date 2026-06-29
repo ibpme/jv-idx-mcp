@@ -29,13 +29,43 @@ https://raw.githubusercontent.com/ibpme/jv-idx-mcp/refs/heads/main/LLM.md
 
 ## Authentication
 
-The server supports optional Bearer token auth. Set `MCP_API_KEY` on the server to enable it — unauthenticated requests will receive `401`.
+The server supports three authentication modes (checked in this order):
+
+### 1. OAuth 2.0 (recommended for production)
+
+When `OAUTH_ISSUER` is set, the server acts as an OAuth 2.0 Resource Server per the MCP authorization specification. It validates JWT access tokens via the issuer's JWKS endpoint and returns proper `401 Unauthorized` responses with `WWW-Authenticate` headers.
+
+Required environment variables:
+- `OAUTH_ISSUER` — OAuth/OIDC issuer URL (e.g. `https://accounts.google.com` or your Auth0/Keycloak domain)
+
+Optional environment variables:
+- `OAUTH_JWKS_URI` — JWKS endpoint URI (defaults to `issuer/.well-known/jwks.json`)
+- `OAUTH_AUDIENCE` — Expected `aud` claim in tokens
+- `OAUTH_SCOPES` — Comma-separated required scopes (default: `mcp:read`)
+- `OAUTH_PUBLIC_PATHS` — Comma-separated path patterns that bypass auth
+
+Example:
+```bash
+export OAUTH_ISSUER=https://your-auth0-domain.us.auth0.com
+export OAUTH_AUDIENCE=https://jv-idx-mcp.yourdomain.com
+export OAUTH_SCOPES=mcp:read
+```
+
+The server exposes OAuth 2.0 Protected Resource Metadata at `/.well-known/oauth-protected-resource` for MCP client discovery.
+
+### 2. Simple Bearer Token
+
+Set `MCP_API_KEY` to enable static Bearer token auth. Unauthenticated requests receive `401`.
 
 ```bash
 export MCP_API_KEY=$(openssl rand -hex 32)
 ```
 
-When auth is enabled, clients must send the token as an `Authorization: Bearer <token>` header (see client configs below). When `MCP_API_KEY` is unset, the server runs openly with no auth.
+Clients must send `Authorization: Bearer <token>` header. This mode is used when OAuth is not configured.
+
+### 3. No Auth
+
+When neither `OAUTH_ISSUER` nor `MCP_API_KEY` is set, the server runs openly.
 
 ---
 
@@ -102,12 +132,17 @@ Add to `~/.config/opencode/config.json`:
 ### Local (self-hosted via Docker)
 
 ```bash
-# Optionally set a token before starting
+# Option A: OAuth 2.0 (recommended)
+export OAUTH_ISSUER=https://your-auth-domain.com
+export OAUTH_AUDIENCE=https://jv-idx-mcp.yourdomain.com
+docker compose up -d
+
+# Option B: Simple Bearer token
 export MCP_API_KEY=your-secret-token
 docker compose up -d
 ```
 
-Then use `http://localhost:8000/mcp` as the URL. Add the `Authorization` header to client configs if you set `MCP_API_KEY`.
+Then use `http://localhost:8000/mcp` as the URL. Add the `Authorization` header to client configs if auth is enabled.
 
 #### Claude Code (local)
 
@@ -136,7 +171,9 @@ Requires Python 3.14+ and [uv](https://github.com/astral-sh/uv). Also requires T
 
 ```bash
 uv sync
-# With auth:
+# With OAuth 2.0:
+OAUTH_ISSUER=https://your-auth-domain.com OAUTH_AUDIENCE=https://jv-idx-mcp.yourdomain.com uv run python server.py
+# With simple Bearer token:
 MCP_API_KEY=your-secret-token uv run python server.py
 # Without auth:
 uv run python server.py
