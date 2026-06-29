@@ -21,7 +21,8 @@ from tools.ta_analysis import compute_ta
 from tools.ta_indicators import list_indicators as _list_indicators
 from tools.ta_indicators import compute_single_indicator
 
-mcp = FastMCP("jv-idx-mcp")
+import os
+mcp = FastMCP("jv-idx-mcp", host=os.getenv("HOST", "0.0.0.0"), port=int(os.getenv("PORT", "8000")))
 
 
 @mcp.tool()
@@ -506,9 +507,4 @@ def get_ta_summary(
 
 
 if __name__ == "__main__":
-    import os
-    mcp.run(
-        transport="streamable-http",
-        host=os.getenv("HOST", "0.0.0.0"),
-        port=int(os.getenv("PORT", "8000")),
-    )
+    mcp.run(transport="streamable-http")
