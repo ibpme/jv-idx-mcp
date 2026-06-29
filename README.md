@@ -18,7 +18,7 @@ MCP server exposing Indonesia Stock Exchange (IDX) market data as tools — fund
 | `get_ta_summary`             | Full TA snapshot — ~50 indicators grouped by category                          |
 
 > **LLM?** Paste this link to get step-by-step setup instructions:
-> `https://raw.githubusercontent.com/ibpme/jv-idx-mcp/main/LLM.md`
+> `https://raw.githubusercontent.com/ibpme/jv-idx-mcp/refs/heads/main/LLM.md`
 
 ## Connecting
 
