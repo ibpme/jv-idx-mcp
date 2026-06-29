@@ -20,45 +20,55 @@ MCP server exposing Indonesia Stock Exchange (IDX) market data as tools — fund
 > **LLM?** Paste this link to get step-by-step setup instructions:
 > `https://raw.githubusercontent.com/ibpme/jv-idx-mcp/refs/heads/main/LLM.md`
 
+## Authentication
+
+The server supports optional Bearer token auth. Set `MCP_API_KEY` on the server to enable it — unauthenticated requests will receive `401`.
+
+```bash
+export MCP_API_KEY=$(openssl rand -hex 32)
+```
+
+When auth is enabled, clients must send the token as an `Authorization: Bearer <token>` header (see client configs below). When `MCP_API_KEY` is unset, the server runs openly with no auth.
+
+---
+
 ## Connecting
 
 The server runs over **Streamable HTTP** (`/mcp`) on port **8000**.
 
 ### Remote (hosted)
 
-Replace `<host>` with your server URL (e.g. `https://jv-idx-mcp.imanbudip.me`).
+Replace `YOUR_TOKEN` with your `MCP_API_KEY` value. Omit the `headers` field if auth is not enabled.
 
 #### Claude Code
 
-Add to `~/.claude.json` or project `.mcp.json`:
+```bash
+claude mcp add --transport http jv-idx-mcp https://jv-idx-mcp.imanbudip.me/mcp --header "Authorization: Bearer YOUR_TOKEN"
+```
+
+Or add to `~/.claude.json` / project `.mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "jv-idx-mcp": {
       "type": "http",
-      "url": "https://jv-idx-mcp.imanbudip.me/mcp"
+      "url": "https://jv-idx-mcp.imanbudip.me/mcp",
+      "headers": { "Authorization": "Bearer YOUR_TOKEN" }
     }
   }
 }
 ```
 
-Or via CLI:
-
-```bash
-claude mcp add --transport http jv-idx-mcp https://jv-idx-mcp.imanbudip.me/mcp
-```
-
 #### OpenAI Codex
-
-Add to your Codex MCP config:
 
 ```json
 {
   "mcpServers": {
     "jv-idx-mcp": {
       "type": "http",
-      "url": "https://jv-idx-mcp.imanbudip.me/mcp"
+      "url": "https://jv-idx-mcp.imanbudip.me/mcp",
+      "headers": { "Authorization": "Bearer YOUR_TOKEN" }
     }
   }
 }
@@ -73,7 +83,8 @@ Add to `~/.config/opencode/config.json`:
   "mcp": {
     "jv-idx-mcp": {
       "type": "http",
-      "url": "https://jv-idx-mcp.imanbudip.me/mcp"
+      "url": "https://jv-idx-mcp.imanbudip.me/mcp",
+      "headers": { "Authorization": "Bearer YOUR_TOKEN" }
     }
   }
 }
@@ -84,10 +95,12 @@ Add to `~/.config/opencode/config.json`:
 ### Local (self-hosted via Docker)
 
 ```bash
+# Optionally set a token before starting
+export MCP_API_KEY=your-secret-token
 docker compose up -d
 ```
 
-Then use `http://localhost:8000/mcp` as the URL in any of the configs above.
+Then use `http://localhost:8000/mcp` as the URL. Add the `Authorization` header to client configs if you set `MCP_API_KEY`.
 
 #### Claude Code (local)
 
@@ -116,5 +129,8 @@ Requires Python 3.14+ and [uv](https://github.com/astral-sh/uv). Also requires T
 
 ```bash
 uv sync
+# With auth:
+MCP_API_KEY=your-secret-token uv run python server.py
+# Without auth:
 uv run python server.py
 ```
