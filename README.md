@@ -4,18 +4,21 @@ MCP server exposing Indonesia Stock Exchange (IDX) market data as tools — fund
 
 ## Tools
 
-| Tool | Description |
-|---|---|
-| `get_stock_fundamental` | Financial statements & ratios from IndoPremier (balance sheet, income, ratios) |
-| `get_company_profile` | Company profile from idx.co.id |
-| `get_broker_name` | Look up firm names for IDX broker codes |
-| `get_broker_details` | Full trading summary for IDX brokers |
-| `get_broker_summary` | Top buyers/sellers by lot volume over a date range |
-| `get_broker_flow` | Non-overlapping broker activity sliced by interval |
-| `get_broker_flow_cumulative` | Expanding cumulative broker positions over time |
-| `list_indicators` | Browse ~130 TA-Lib indicators with their parameters |
-| `compute_indicator` | Compute a single TA indicator (latest value or time series) |
-| `get_ta_summary` | Full TA snapshot — ~50 indicators grouped by category |
+| Tool                         | Description                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------ |
+| `get_stock_fundamental`      | Financial statements & ratios from IndoPremier (balance sheet, income, ratios) |
+| `get_company_profile`        | Company profile from idx.co.id                                                 |
+| `get_broker_name`            | Look up firm names for IDX broker codes                                        |
+| `get_broker_details`         | Full trading summary for IDX brokers                                           |
+| `get_broker_summary`         | Top buyers/sellers by lot volume over a date range                             |
+| `get_broker_flow`            | Non-overlapping broker activity sliced by interval                             |
+| `get_broker_flow_cumulative` | Expanding cumulative broker positions over time                                |
+| `list_indicators`            | Browse ~130 TA-Lib indicators with their parameters                            |
+| `compute_indicator`          | Compute a single TA indicator (latest value or time series)                    |
+| `get_ta_summary`             | Full TA snapshot — ~50 indicators grouped by category                          |
+
+> **LLM?** Paste this link to get step-by-step setup instructions:
+> `https://raw.githubusercontent.com/ibpme/jv-idx-mcp/main/LLM.md`
 
 ## Connecting
 
