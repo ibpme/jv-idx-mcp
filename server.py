@@ -3,11 +3,30 @@
 from __future__ import annotations
 
 import json
+import secrets
 
 import httpx
 from curl_cffi.requests.exceptions import HTTPError as CurlHTTPError
 from curl_cffi.requests.exceptions import RequestException as CurlRequestException
 from mcp.server.fastmcp import FastMCP
+from starlette.responses import Response
+
+
+class BearerAuthMiddleware:
+    """ASGI middleware that enforces Bearer token auth when MCP_API_KEY is set."""
+
+    def __init__(self, app, api_key: str) -> None:
+        self.app = app
+        self.expected = f"Bearer {api_key}"
+
+    async def __call__(self, scope, receive, send) -> None:
+        if scope["type"] == "http":
+            headers = dict(scope.get("headers", []))
+            auth = headers.get(b"authorization", b"").decode()
+            if not secrets.compare_digest(auth, self.expected):
+                await Response("Unauthorized", status_code=401)(scope, receive, send)
+                return
+        await self.app(scope, receive, send)
 
 from tools.idx_broker_search import lookup_broker_details, lookup_broker_name
 from tools.idx_profile import get_profile
@@ -507,4 +526,14 @@ def get_ta_summary(
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    import uvicorn
+
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8000"))
+    api_key = os.getenv("MCP_API_KEY", "")
+
+    if api_key:
+        app = mcp.streamable_http_app()
+        uvicorn.run(BearerAuthMiddleware(app, api_key), host=host, port=port)
+    else:
+        mcp.run(transport="streamable-http")

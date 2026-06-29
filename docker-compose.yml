@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    environment:
+      - MCP_API_KEY=${MCP_API_KEY:-}
     networks:
       - proxy
 

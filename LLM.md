@@ -7,11 +7,17 @@ Follow the steps for their tool below. No extra explanation needed — just run 
 
 - Protocol: Streamable HTTP
 - Endpoint: https://jv-idx-mcp.imanbudip.me/mcp
-- No authentication required
+- Authentication: Bearer token via `Authorization` header (if `MCP_API_KEY` is set on the server)
 
 ## Claude Code
 
-Run this command:
+Run this command (replace `YOUR_TOKEN` if auth is enabled):
+
+```bash
+claude mcp add --transport http jv-idx-mcp https://jv-idx-mcp.imanbudip.me/mcp --header "Authorization: Bearer YOUR_TOKEN"
+```
+
+Or without auth:
 
 ```bash
 claude mcp add --transport http jv-idx-mcp https://jv-idx-mcp.imanbudip.me/mcp
@@ -32,7 +38,8 @@ Add this to your MCP config file (typically `codex_mcp_config.json` or wherever 
   "mcpServers": {
     "jv-idx-mcp": {
       "type": "http",
-      "url": "https://jv-idx-mcp.imanbudip.me/mcp"
+      "url": "https://jv-idx-mcp.imanbudip.me/mcp",
+      "headers": { "Authorization": "Bearer YOUR_TOKEN" }
     }
   }
 }
@@ -47,7 +54,8 @@ Add this block inside `~/.config/opencode/config.json` under the `mcp` key:
   "mcp": {
     "jv-idx-mcp": {
       "type": "http",
-      "url": "https://jv-idx-mcp.imanbudip.me/mcp"
+      "url": "https://jv-idx-mcp.imanbudip.me/mcp",
+      "headers": { "Authorization": "Bearer YOUR_TOKEN" }
     }
   }
 }
